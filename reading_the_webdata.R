@@ -148,3 +148,11 @@ gsub("\n","",remove)
 
 
 
+# analyticsvidhya
+url <- 'https://www.analyticsvidhya.com/blog/2017/03/beginners-guide-on-web-scraping-in-r-using-rvest-with-hands-on-knowledge/'
+
+#Reading the HTML code from the website
+webpage <- read_html(url)
+popular_html <- html_nodes(webpage,xpath = "//div[@class='text-content']//p[@style='text-align: justify;']")
+
+html_text(popular_html)
