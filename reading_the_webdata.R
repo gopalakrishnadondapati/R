@@ -156,3 +156,26 @@ webpage <- read_html(url)
 popular_html <- html_nodes(webpage,xpath = "//div[@class='text-content']//p[@style='text-align: justify;']")
 
 html_text(popular_html)
+
+
+# For Single Paragraph
+url <- 'https://www.analyticsvidhya.com/blog/2017/03/beginners-guide-on-web-scraping-in-r-using-rvest-with-hands-on-knowledge/'
+ 
+   #Reading the HTML code from the website
+webpage <- read_html(url)
+popular_html <- html_nodes(webpage,xpath = "//*[@id='post-34233']/div/p[1]")
+ 
+html_text(popular_html)
+
+
+# For Table of Content matter.
+url <- 'https://www.analyticsvidhya.com/blog/2017/03/beginners-guide-on-web-scraping-in-r-using-rvest-with-hands-on-knowledge/'
+
+#Reading the HTML code from the website
+webpage <- read_html(url)
+popular_html <- html_nodes(webpage,xpath = "//*[@id='post-34233']/div/ol")
+
+html_text(popular_html)
+
+
+
