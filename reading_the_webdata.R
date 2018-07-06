@@ -39,3 +39,112 @@ article_pageviews()
 # Example of using the "biednik" package.
 # To access the wordnik website.
 # For access the key -->Just follow the wordnik developr portal
+
+
+
+# Web scrapping using the rvest package.
+library(rvest)
+#Specifying the url for desired website to be scrapped
+url <- 'https://www.imdb.com/search/title?count=100&release_date=2016,2016&title_type=feature'
+
+#Reading the HTML code from the website
+webpage <- read_html(url)
+# I want to select following 
+# Rank: The rank of the film from 1 to 100 on the list of 100 most popular feature films released in 2016.
+#Title: The title of the feature film.
+# Description: The description of the feature film.
+# Runtime: The duration of the feature film.
+# Genre: The genre of the feature film,
+# Rating: The IMDb rating of the feature film.
+# Metascore: The metascore on IMDb website for the feature film.
+# Votes: Votes cast in favor of the feature film.
+# Gross_Earning_in_Mil: The gross earnings of the feature film in millions.
+# Director: The main director of the feature film. Note, in case of multiple directors, I'll take only the first.
+# Actor: The main actor of the feature film. Note, in case of multiple actors, I'll take only the first.
+
+# Place the mouse on Rank number then right click select "inspect"
+
+rank_data_html <- html_nodes(webpage,'.text-primary')
+
+#Converting the ranking data to text
+rank_data <- as.numeric(html_text(rank_data_html))
+
+
+title_data_html <- html_nodes(webpage,'.lister-item-header a')
+#Converting the title data to text
+title_data <- html_text(title_data_html)
+
+
+
+# the description section
+description_data_html <- html_nodes(webpage,".ratings-bar+ .text-muted")
+description_data <- html_text(description_data_html)
+head(description_data)
+#Data-Preprocessing: removing '\n'
+description_data <- gsub("\n    ","" ,description_data)
+
+
+# runtime scetion
+runtime_data_html <- html_nodes(webpage,'.text-muted .runtime')
+runtime_data <- as.numeric(gsub(" min","",html_text(runtime_data_html)))
+
+#Genere Section
+genre_data_html <- html_nodes(webpage,'.genre')
+genre_data <- html_text(genre_data_html)
+
+
+# Rating section
+rating_data_html <- html_nodes(webpage,".ratings-imdb-rating strong")
+rating_data <- as.numeric(html_text(rating_data_html))
+
+# metascore scetion
+metascore_data_html <- html_nodes(webpage,'.metascore')
+metascore_data <- html_text(metascore_data_html)
+metascore_data <- as.numeric(gsub("       ","",metascore_data))
+
+# Votes section
+votes_data_html <- html_nodes(webpage,'.sort-num_votes-visible span:nth-child(2)')
+votes_data <- html_text(votes_data_html)
+votes_data <- as.numeric(gsub(',',"",votes_data))
+
+# Gross earning
+groos_data_html <- html_nodes(webpage,'.sort-num_votes-visible span:nth-child(5)')
+gross_data <- html_text(groos_data_html)
+gross_data <- gsub("M","",gross_data)
+gross_data <- as.numeric(substring(gross_data,2,))
+
+# Director section
+director_data_html <- html_nodes(webpage,'.text-muted+p a:nth-child(1)')
+director_data <- html_text(director_data_html)
+
+# Actor section
+actor_data_html <- html_nodes(webpage,'.lister-item-content .ghost+ a')
+actor_html <- html_text(actor_data_html)
+
+# Zomota
+url <- 'https://www.zomato.com/bangalore/double-decker-1-brigade-road/reviews'
+
+#Reading the HTML code from the website
+webpage <- read_html(url)
+popular_html <- html_nodes(webpage,xpath = "//div[@id='tabtop']//div[@class='notifications-content']/div[3]/div[1]/div//div[@tabindex='0']") 
+
+html_text(popular_html)
+remove <- gsub("\n                ","",html_text(popular_html))
+remove <- gsub("                ","",remove)
+gsub("\n","",remove)
+
+
+# Zomota
+url <- 'https://www.zomato.com/bangalore/double-decker-1-brigade-road/reviews'
+
+#Reading the HTML code from the website
+webpage <- read_html(url)
+popular_html <- html_nodes(webpage,xpath = "//div[@class='res-reviews-container res-reviews-area']//div[@tabindex='0']")
+
+html_text(popular_html)
+remove <- gsub("\n                ","",html_text(popular_html))
+remove <- gsub("                ","",remove)
+gsub("\n","",remove)
+
+
+
