@@ -179,3 +179,49 @@ html_text(popular_html)
 
 
 
+
+# url <- 'https://www.4coffshore.com/windfarms/oahu-north-call-area-united-states-us0n.html'
+# 
+# #Reading the HTML code from the website
+# webpage <- read_html(url)
+# popular_html <- html_nodes(webpage,xpath = "//div[@class='table-responsive']//table[@class='tblProject']")
+# 
+# html_table(popular_html)
+# 
+# View(html_table(popular_html))
+# 
+# do.call(rbind,html_table(popular_html))
+# 
+# 
+# url <- 'https://www.4coffshore.com/windfarms/windfarms.aspx?windfarmId=US12'
+# 
+# webpage <- read_html(url)
+# popular_html <- html_nodes(webpage,xpath = "//table[@class='table table-striped table-condensed']//a[@class='linkWF']")
+# 
+# html_attr(popular_html,"href")
+# 
+# paste('https://www.4coffshore.com',html_attr(popular_html,"href"),sep = "")
+
+
+zz <- 'https://www.4coffshore.com/windfarms/windfarms.aspx?windfarmId=US12' %>% 
+  
+  read_html() %>% 
+  
+  html_nodes(.,xpath =  "//table[@class='table table-striped table-condensed']//a[@class='linkWF']") %>% 
+  
+ html_attr(.,"href") %>% paste('https://www.4coffshore.com',.,sep = "") %>% map(.,read_html) %>% 
+  
+  map(.,html_nodes,xpath = "//div[@class='table-responsive']//table[@class='tblProject']") %>% 
+  
+  map(.,html_table) %>% 
+  
+  map(., ~ do.call(rbind,.x))
+  
+zz1 <- zz[!unlist(lapply(zz,function(x) is.null(x)))]
+
+zz2 <- lapply(zz1[2:length(zz1)], function(x) x[!(names(x) %in% c("X1", "X2"))])
+
+
+zz3 <- do.call(cbind, c(zz1[1],zz2))
+
+write.csv(zz3,'zz3.csv')
